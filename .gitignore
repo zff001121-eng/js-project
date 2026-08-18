@@ -1,0 +1,10 @@
+# 依赖
+node_modules/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 第三方克隆仓库（不随本项目上传）
+JSReverser-MCP/
+camoufox-reverse-mcp/

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "camoufox-reverse": {
+      "command": "python",
+      "args": ["-m", "camoufox_reverse_mcp", "--headless"]
+    }
+  }
+}
