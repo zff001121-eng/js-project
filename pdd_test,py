@@ -1,0 +1,42 @@
+import time
+
+import requests
+import execjs
+
+with open('all_code1.js', 'r', encoding='utf-8') as f:
+    txt = f.read()
+ctx = execjs.compile(txt)
+
+anti = ctx.call('A', int(time.time()*1000))
+print(anti)
+headers = {
+    'Accept': 'application/json, text/javascript',
+    'Accept-Language': 'zh-CN,zh;q=0.9',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Origin': 'https://pinduoduo.com',
+    'Pragma': 'no-cache',
+    'Referer': 'https://pinduoduo.com/',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-site',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0',
+    'sec-ch-ua': '"Microsoft Edge";v="149", "Chromium";v="149", "Not)A;Brand";v="24"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+}
+
+params = {
+    'tf_id': 'TFRQ0v00000Y_13396',
+    'page': '1',
+    'size': '39',
+    'anti_content': anti
+}
+# "https://www-hj.douyin.com/aweme/v1/web/comment/list/?device_platform=webapp&aid=6383&channel=channel_pc_web&aweme_id=7667209098403876136&pc_img_format=webp&cursor=0&count=10&item_type=0&insert_ids=&whale_cut_token=&cut_version=1&rcFT=&update_version_code=170400&pc_client_type=1&pc_libra_divert=Windows&support_h265=1&support_dash=1&cpu_core_num=16&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=Win32&browser_name=Edge&browser_version=150.0.0.0&browser_online=true&engine_name=Blink&engine_version=150.0.0.0&os_name=Windows&os_version=10&device_memory=32&platform=PC&downlink=10&effective_type=4g&round_trip_time=0&webid=7618113127741474344&uifid=d9c83d80110ac3c8e785b8c343d751a11fe18d1882e6e45bacc56136cf7b8ae9299c6bff90c29561ec1d5270887aed0d87730eb64123bebbfd41873686028d1f6afe909aa243d31759360fd4afb0e7a7773f4da8953443e43f325d8e063ffac69da841515967449864a7557fc4c38672e72577505a6a6601fd50f0234225f184c01185624cfe6ef50360f63f129dd7bd5151ea4e36e769427868dbaf68a30970"
+response = requests.get('https://apiv2.pinduoduo.com/api/gindex/tf/query_tf_goods_info', params=params, headers=headers, proxies=proxieszz, verify=False)
+
+print(response.text)
+# Note: json_data will not be serialized by requests
+# exactly as it was in the original request.
+#data = '{"idStr":"63FBE02AA025FE8E"}'
+#response = requests.post('https://open-api.pinduoduo.com/doc/article/getArticle', cookies=cookies, headers=headers, data=data)
