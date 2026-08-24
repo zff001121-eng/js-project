@@ -1,1 +1,200 @@
+const parser = require("@babel/parser");
+const generate = require("@babel/generator").default
+const traverse = require("@babel/traverse").default
+const types = require("@babel/types");
+const fs = require("fs")
 
+const code = fs.readFileSync("./input.js", 'utf8')
+
+const ast = parser.parse(code)
+
+// 解密函数代码
+s = ["kmkRjCkHyG==", "tSkzhCooda==", "W5HyfwldN8oaq8kZWRj+fCkwCColW6pdVG==", "oNjak8o1", "W7ijFCk/zq==", "WQeJn8kMW54=", "W5TZqxn7W4NcJSo1WR4=", "WQfrW7JcOSocW5vs", "W74jevDO", "WO3dQSkcgJu=", "hKrxomoO", "jhBcNIrJ", "Emo/W53dGq==", "rMaLc3i=", "hmkKWPXWWQddJmkmWQC3", "W75cASo9WRKndmkl", "vConW4uZjq==", "gmkOnSkozG==", "EmkgWP/cMCkJWOib", "W6uKbffk", "wCkyWRhcR8km", "nNFcRYC=", "rv0Qd0C3FNlcGSk+WQy=", "WQdcObtdVSoVg8oHWPddNW==", "W4yRqSkPqq==", "WPGeb8kHW50=", "mcdcOmomW5xdLGBdQ2lcVeJdMmkWhmkD", "eSkQnSkz", "WPquomo0sq==", "wtVcRmkpW6m=", "A8klWPxcL8kd", "WP1qWP95WO0=", "WRNdQ2zLW7K=", "W4CcWOjBWRHvCG==", "WR1iW63cOCoBW5LnW7zVxh9r", "wLpdO8kqW4JcG8oG", "rCoGW7pdJmoW", "f8kHmCkkEuq=", "cmoJdmoUW7q=", "W5XDW6q=", "WQpdRKvKW7TRW6eYW7e=", "WPFdK8k9cdNcQKeSsa==", "WRLKW7/cHmoL", "w1mHpNi=", "DhyQhuq=", "W53dIrP1qa==", "W44Zz8k/", "W6BdPszHCG==", "WQz3W4/cPCoV", "CSkOWQngECkPWRNcPmkCW6ZcGCk3W6y=", "W5v+wmokWR8=", "xNqggwy=", "qCorzgxdQCoeW5ZcM1W=", "jmkYWObWWQe=", "jCovWQq0W5pcVa==", "tCoyW6pdKv0=", "xv4N", "nHO9WOyQW6G=", "aCk1WP1aWPC=", "W4uVjffacG==", "wSoGW5BdGMa=", "rCkShCoJ", "W5nMr8ojWQ4=", "uSk8WOFcQSkK", "W4TaW7ldUcW1l8kMWQZcL8ouW5S=", "WQ7cQe/dMCoWtbb5qSk3zeKbW5JcS8kL", "W6ldGZvkvSk3fx7cJG==", "lLb2lCoroGG=", "W7CJWOvkWOy=", "lfxcNSkJ", "s8k6WOhcU8kC", "W6VcKmo2hry=", "ymozW7q7Aa==", "CIX7rdK=", "W44RqCk5W5C=", "W558rN1t", "lHBcOmorW50=", "q8oZW5Kf", "BaNcUSkzW6v9AcRdKdWe", "W4HrW6xdGYK0hSkAWQG=", "D1WrcfK=", "W5VdRIrhWQtdG2K=", "W618C3XL", "W5eRjv1xpmoVWQ3dMq==", "mwtdISoNW6XgoCoVsa==", "W71Yx1PY", "W7uLv8k4W5q=", "W71QFurt", "WORcH3JdUmoj", "WRldO3r8W7u=", "pf3cJbfW", "FCodW5xdT1W=", "FmoFy2VdLq==", "WRJdRfLVW7TIW7aRW6qdW5O=", "WQG/nG==", "yCoJW5VdGCohW5qDA8oW", "bCoGWQCSwG==", "CCoWW7pdPsKhW4ZdG1ZcP8kjuvrd", "W5VdSd5uWQldMwpdV8oM", "emoNgmoiW5m=", "amkKWPf8WPS=", "W6OWzSkNEW==", "WRKTmmkYW50=", "W7SmwSkqW6q=", "F8oFzMhdQCod", "j1xcTmkGgq==", "W6RdNZzBsW==", "W4SVp3vao8o+WRZdGW==", "W4C3W7JcMdK=", "D8oMW6S7qa==", "y8olDgxdQCo9W5ZcHvRcRa==", "W4qEke5i", "gCkRWPTJ", "WOOogmk7W4NdIG==", "WRJdICkUhtNcVa==", "ySoFDMNdVmolW4hcHa==", "WP7cGfZdMCoe", "wvuPdLGMwMNcLW==", "W5vnp1tdSW==", "bLzAeCoK", "WRFdK8k9cdNcIKeSsmkjWP3dIWhdNmoNx8oeWQW=", "WRuKdSkmW4O=", "xSkHWQxcMmkc", "BqZdSmopW64=", "W7uoACk+W7jbW6ijWPu=", "mxFdHSo4W40=", "W5ailLzq", "d2ZcR8kalG==", "W7ddRtnkWQJdJM7cR8oqALldNcxdSb8xlmoTW5efDCkdW68kW7NcVgtdKmkhrGWTWPq=", "fmk1WRfvWQ8=", "nJOjWQqu", "DqpcT8kY", "WQrbWP1hWOu=", "W7hdPGTsWOa=", "xv0Nagu=", "WO7dK8k9gdtcVvO6vmk4", "evxdV8ocW48=", "bmoWWPabW7W=", "W7LaW77dJsT4gSkuWQ3cMG==", "W5vxW4hdJY4=", "u8oQW483hG==", "W7a5nw1s", "W51AhNFdHmorACkMWQu=", "cmkXpCkEEv7dLSo6pq==", "WQBcVHZdSSo9", "WOSueSk/W43dIG==", "qCosW67dPmoK", "W5GwWPrJWRrwCfHj", "W7/dNIvTwSk+h1RcLfGvCq==", "W4RdNJjwqq==", "sui0oM8=", "y8kkWQriCq==", "W7z2W43dJXe=", "vcFdHSo6W5S=", "dLbMkmotkYiCg8o8yCojW61FWQhcKYC1WPJcMSoxBq==", "jmotWRa+W43cOSkJaW==", "W5uTnvzjoConWQFdMW==", "WPiGkmozzCodDmoRva==", "AGddJmoPW4S=", "W4qqASk2ta==", "FxSNcgO=", "B8osAwxdTCoEW60=", "WRzjW7tcJ8oBW45kW6H6swrkW7m=", "WQlcQvJdR8oNtHTDB8k9Fa==", "WPO0oCkRW6u=", "lvRcMCkZf29ZW5O2WQBcUq==", "W5qUW7tcKdRcGmkCs8oZ", "WOSXgCkVW4u=", "W4SHmKPaomo2WR7dJG==", "FGZcVCkT", "qh0VkKqwmxRcIW==", "bmo7WPu+W44=", "W69sogldKq==", "WPSGjmo0", "awJcJSk8pG==", "zmkhpmoojG==", "W53dOqnCqG==", "xG7cQCkIW4C=", "x8k5WO/cL8ki", "umohW6hdHSo9", "W6VcK8o2", "etWLWQGJ", "W5/dRsrdWQxdNM7dRSoXFW==", "nxdcTdv1", "W5eHW7pcNHi=", "xIJcTSkqW4K=", "WQxcRXpdSmoh", "BqxcImkbW6q=", "WQmGj8kWW5tdOgeFWR5gW5BdNa==", "WQFdQfvVW6vUW4m4W7m=", "hmkOlCkSra==", "s8kHAcSz", "iSo1WOeABmoLW705", "WQBcRqldVSoSha==", "xCo6W7BdG8oT", "DCklWPJcK8ksWPu3W47dKCklW4DWW4Ty", "vh0TifW=", "CXJcQSkJW6jgAdhdQd0u", "jrmSWOij", "WO7cRw3dPCod", "WQf1W6RcOmoh", "WQVcHwhdTmoC", "gmkOoSkmF2/dNSo3mHO=", "WPOrgSkXW5W=", "W5qbWO1gWR1VFKHvfG==", "rCo9W5KBzSkoWR3cOvuGW4CUW5TCgq==", "v8oRW5ZdN8oh", "fCoKWOCFBSo0W5CIW5NcI8kI", "W6RcT8owpqK=", "p8oyWR8V", "W4DBbhNdMq==", "q8kLWPbMBG==", "beZcTdzw", "b2KYtea=", "uSktWQ/cNCkz", "tmkKWQBcLSk+", "nSojiSoFW6BcSsa+W4C=", "W7SMzCkOW68=", "BmocW4K9CG==", "m3SYrMi=", "i3/dI8o3", "WQxcVb/dR8oMbSo2WOxdNG==", "z8oEW6elkG==", "W47dSsDcWRu=", "W5TUggZdNG==", "pe4VsW==", "lLP9amofoGide8oTzSosW6jOWQFcKJ0cWOhcK8ovFmkK", "W4qNFSk8W4eV", "kcVcOmoxW53dLXC=", "W5aAWOvB", "WObbWRjYWRm=", "qCkmWOXaAa==", "WRRdOL5L", "seOHbv8=", "mCozWQu=", "WQvoW4KqW4u=", "WP8ieSkRW7q=", "W55yhwRdNW==", "zKeYega=", "w2xdOmksW4a=", "W5WzWOvB", "W7OBrmk6W7O=", "eSoWWP0ECmozW7C9W5VcJCkI", "u8kgWRbJtG==", "vZH7AcG=", "auaS", "h8oRWQOmya==", "W63cT8o8gs0=", "WOiClCksW7m=", "vmktWQn9vW==", "omoxWOCkyW==", "W7r6gvhdJW==", "W5SfW4hcTY0=", "W7yMFCk5zNi=", "fmkQWPfIWRJdImkfWRy=", "wLFdVCkyW4BcJq==", "WQBcOKldQa==", "b3NcMYPe", "wSkpwGmD", "WPjMWQ98", "cmkmhCkFqa==", "WPzhW63cQW==", "mNFcQdbPv8oOF1y=", "WQf+W7WqW4O=", "tSkTemoU", "WRPuW7ZcQa==", "yCoZW5C=", "uCo6W7xdT2WLW4xdK2O=", "W4n8xvP4W47cH8oKWRi=", "tmocW48S", "aulcNCkufa==", "feeT", "W4hcLCopbbu=", "W6VdPqPrAq==", "rSoaW487amolp2FcHCkejmkkucW=", "W5ONwmkUW70=", "e2D4e8ou", "xhOhihO=", "W7dcU8o2gZ0=", "WPZcGw7dKmov", "W5TTqxDPW4xcS8o1WQJdTuNdH8oXWOvNW6m=", "h8kLk8km", "W5VdTYjiWOpdGM7dPSoLyLFdNcpdSciC", "WQKUmSkSW57dPhSeWOe=", "WO3cIsBdTCoe", "W7yfESkYFa==", "smk+AsG/", "W6mfW7JcOWu=", "uYnUwsm=", "CmkGWPxcKCkO", "keZdGCohW6e=", "W6JcPmoAbru=", "ofb+jCovpaGC", "W71VeMddQG==", "WPNdM0zDW74=", "WPflW47cHCok", "W7LtDxXU", "W7ehW7pcLH0=", "W79Pu2bw", "efK6sLNdTrfJWRZdPum=", "gNGFr34=", "W5DPySo9WO8=", "WO8LnmokDSojya==", "k8kwg8kIEa==", "sLKWlKC3vMhcICkKWPddVwuY", "WOpcP2NdQSod", "qvJdUSki", "W6WHWPzRWRu=", "nmo8WRaAvG==", "W4uIwSkjwG==", "j2tdISo+W4bAiCoTBHC1lq==", "ba/cTmoUW4e=", "W4qMzCk0AMxdR8opu1LXEdlcGSokgSkV", "tmkch8o+iG==", "nhJdGCo2W6vBlSo6sq==", "iSkcWQvLWRm=", "tmo0W6pdR0C=", "W73dJcnUWOy=", "qI5Fqs04uCkyW44=", "tSoDW6OgCG==", "WOODq8kmWOS=", "W4JdQInpWQddIa==", "qwOXj14=", "nmoyWPuSW50=", "umoFW4mQkSoPlgZcNW==", "WOxcJ2JdImoh", "WPyinSonqq==", "W73cOCo6pI4=", "D8obW5VdVCoE", "WR/dRSkMcJ0=", "cSo0aSo2W7dcQsq+W5ldVfO=", "W4ThW6tdHa==", "mrZcH8o4W5G=", "WOzMWRH2WOG=", "W5SjF8k0W61k", "CJddLSo+W6DgESk0gmkK", "W7/cRvO=", "ACoqy2/dV8op", "DSo9W4BdTmoH", "AdVdJCo8", "W7uHpxvk", "WPxdICk8hI7cMuC/uSkK", "W5/dPYju", "b1LGi8oi", "nCkDWPr5WOq=", "cSkqWRDcWOm=", "uSovW7hdOCoG", "WPWkg8ktW78=", "W4ObW7BcKra=", "WPnnW5aSW5DrWRO=", "W6VcG8o6aJDYWOL+CG==", "qCovW7q/ga==", "msRcSmoEW4ddMaZdLuRcSuxdPa==", "nHmJWOuxW6u3CCkoWPpdPW==", "s1NdVmkxW4dcHq==", "W6iQW5pcNtm=", "W4KAvCktW7C=", "qg4Jnwu=", "bee/rLpdLbPVWR8=", "aSkUWRHEWQy=", "WQddUhX7W44=", "W4vbaNFdHmoxAq==", "s1a3ceW=", "pINcUSoCW58=", "WOiJemksW6m=", "ir06WOOVW54IFSkiWOJdJXhcNCoLFSo3W7yrW6W=", "qCoUC1pdOG==", "W4tdJqfiWRq=", "WOpdUM9zW5K=", "nLdcSJLc", "WPDhW5dcMSo9", "W4mrWPz1WR8=", "WPbxWRrvWRa=", "W5XyhLtdQq==", "W7mMwSkkW4y=", "ltFcTSoRW53dNaBdQhFcVK7dUW==", "W4Heq8ovWPG=", "gCoKWP0A", "m3pcSbHw", "WQFdQfv4W6nOW4C4", "W6zbsSoTWOK=", "s17dSSksW47cHCoHqXWin1yTDG==", "qg4Ylu4RjN4=", "WPqKkCoM", "l3BcTcC=", "wCkjWOhcMmkA", "W7DPBej/", "WOixiSkRW6G=", "W7ycavnq", "WOzpWRr3WOu=", "W64wF8kpW7C=", "WQfjW7tcQW==", "WQeGnSkaW5JdPMC=", "W6HLW67dHde=", "kCozgCoFW4i=", "WRRcOK/dUCoGqbbOAG==", "W4eGzmkqW7C=", "zZZdImo8W6Dg", "WOxcM3pdI8ot", "W5uIlLPa", "W7PQv3fP", "nSkulmk+Da==", "WQhcO1W=", "WQjhW7RcPCoG", "W6WOE8k0W4S=", "gMvNbSoH", "WQW2eSkGW44=", "xCkOrGyi", "W4KZF8kY", "WQScaCk8W78=", "W4WoEmk4W6HcW6qfWOi=", "xLmPdG==", "W6BdGILn", "W6y6WQLJWOi=", "WRVcQYBdUmoI", "W4ldPaboWQm=", "A8kCtbaK", "zCoCW5aVBW==", "bGy2WOuIW4aZE8ktWP0=", "fmoWWQWsW6W=", "y1G5nL8=", "ighcUcrI", "cmkLoCkmF0u=", "cCoPWQOkrG==", "yCkHWQLbuW==", "WOtcPZtdL8o5", "mH08", "WRTNW7GdW6G=", "ifFcKSk6hMrcW6u3", "smkZhmoOdW==", "qs9o", "gmojbCoZW6a=", "jxFdKCoY", "WRPKWPfnWPi=", "EmkUWQ5pzCk5WQ8=", "W50zFCk0W7jBW7G=", "W5ZdLbTbWQq=", "WQ8jj8kSW6a=", "WQfZW6OCW616WPS=", "mNFcJIDZu8oPBG==", "W6y6DSkQAG==", "zCkfa8otpq==", "WOZcHbFdISo8", "F8oWW5RdMSo3W5mqDmoNW7mrttWsFq==", "lmoJWPmoW6K=", "eSoUWOGsoSkxW6pcQsq=", "vheWd28=", "WPi8WQlcIwJcLCoduSkIW4NcMW==", "W5P8v3f4W5q=", "b8o2pCoZW4y=", "W4DZtgi=", "i0ZcN8k6hG==", "WRhcVJpdMCoZ", "lCkWdSk4rG==", "W7NdIJPJxq==", "WQD5W6uHW6O=", "i8ogWRi6W4VcTCkvfdv3W4CqiCoNWRtdPa==", "c8kLpmkgqW==", "ECkCrdG/WQH8", "smo8W5mA", "W4PAW4hdQZe=", "W5VdOZjlWOm=", "hSkKWOz+WQpdImolWQeRWPtdPa==", "cfFcH8k1aW==", "EmkAWQ5+FW==", "A8kTWQBcLSki", "WPNdLmk6fdhcQW==", "l8obn8o2W5dcQYyNW58=", "sCkGwIii", "sGVcL8kwW74=", "CmoEW4qQmG==", "W488zq==", "WOarfCkkW43dKgRdHSoGsKK=", "lhFdLq==", "kCktWOHtWRe=", "rv0TguC7vwe=", "nx/dImo2W5bgiCoYxq==", "W4f3W4BdRJq=", "WRRcP0BdL8or", "n1ddJmo8W7y=", "WQnRW7RcM8o6", "W4pcTSodgbu=", "sCoZW5qkz8koWPBcO3uIW5y=", "v8kXfSoUaqDtgSoW", "WRGimSkuW5G=", "pSoxWQuuW4JcVSkwaYHXW4CqaCo3", "hfnzeCoE"];
+n = s, o = 458, function (t) {
+  for (; --t;) n.push(n.shift());
+}(++o);
+var f = function t(e, n) {
+    var r = s[e -= 0];
+    void 0 === t.GMJOxm && (t.CPxjpy = function (t, e) {
+      for (var n = [], r = 0, o = void 0, a = "", i = "", c = 0, u = (t = function (t) {
+          for (var e, n, r = String(t).replace(/=+$/, ""), o = "", a = 0, i = 0; n = r.charAt(i++); ~n && (e = a % 4 ? 64 * e + n : n, a++ % 4) ? o += String.fromCharCode(255 & e >> (-2 * a & 6)) : 0) n = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=".indexOf(n);
+          return o;
+        }(t)).length; c < u; c++) i += "%" + ("00" + t.charCodeAt(c).toString(16)).slice(-2);
+      t = decodeURIComponent(i);
+      var d = void 0;
+      for (d = 0; d < 256; d++) n[d] = d;
+      for (d = 0; d < 256; d++) r = (r + n[d] + e.charCodeAt(d % e.length)) % 256, o = n[d], n[d] = n[r], n[r] = o;
+      d = 0, r = 0;
+      for (var s = 0; s < t.length; s++) r = (r + n[d = (d + 1) % 256]) % 256, o = n[d], n[d] = n[r], n[r] = o, a += String.fromCharCode(t.charCodeAt(s) ^ n[(n[d] + n[r]) % 256]);
+      return a;
+    }, t.hpBrye = {}, t.GMJOxm = !0);
+    var o = t.hpBrye[e];
+    return void 0 === o ? (void 0 === t.HWFFId && (t.HWFFId = !0), r = t.CPxjpy(r, n), t.hpBrye[e] = r) : r = o, r;
+  },
+  W = f
+
+// 还原解密函数
+traverse(ast,{
+    CallExpression: function (path){
+        if (path.node.callee.name === "W" || path.node.callee.name === "t" ||
+            path.node.callee.name === "e" || path.node.callee.name === "r" ){
+
+            if (path.node.arguments.length === 2 && path.node.arguments[0].value && path.node.arguments[1].value){
+                console.log(path.toString())
+                arg1 = path.node.arguments[0].value
+                arg2 = path.node.arguments[1].value
+
+                let result = W(arg1, arg2)
+                path.replaceInline(types.valueToNode(result))
+            }
+
+        }
+    }
+})
+memory = {}
+traverse(ast, {
+    AssignmentExpression: function (path){
+        if (path.node.left.type === "MemberExpression" && path.node.right.type ==="StringLiteral"){
+            // console.log(path.toString())
+            memory[path.node.left.property.value] = path.node.right.value
+        }
+    }
+})
+// console.log(memory)
+
+traverse(ast, {
+    MemberExpression: function (path){
+        if (path.node.object.name==="n" || path.node.object.name==="r"){
+            if (path.node.property.type === "StringLiteral"){
+                const res = memory[path.node.property.value]
+                if (
+                    path.parentPath.isAssignmentExpression() &&
+                    path.parentKey === "left"
+                ){
+                    return
+                  }
+                if (res !== undefined){
+                    // console.log(res)
+                    // console.log(path.toString())
+                    path.replaceWith(types.stringLiteral(res))
+                }
+
+            }
+
+        }
+
+    }
+})
+
+
+
+// 还原花指令
+traverse(ast, {
+        CallExpression: {
+            exit: function (path) {
+
+                if (path.get('callee.object').node && path.get('callee.property').node.type === "StringLiteral" &&
+                    ["r", "n"].includes(  path.get('callee.object').node.name)){
+                    // console.log(path.toString())
+                    string_value = path.get('callee.property').node.value
+                    // console.log(string_value)
+                    string_arguments = path.node.arguments
+                    const e = path.scope.getBinding(path.get('callee.object').node.name).path.get('init').node.name
+
+                    if (e !== undefined){
+
+                        eScope = path.scope.getBinding(e).scope.path
+                        // 遍历作用域
+                        eScope.traverse({
+                            AssignmentExpression: function (assignPath) {
+
+                                if (assignPath.get("left.property").node && assignPath.get("left.property").node.value === string_value ){
+                                    // 还原表达式类型
+                                    // console.log(assignPath.toString())
+                                    if (assignPath.get("right.body.body.0.argument").node.type === "BinaryExpression"){
+                                        // console.log(assignPath.get("right.body.body.0.argument").node.type)
+                                        left = string_arguments[0]
+                                        right = string_arguments[1]
+                                        operator = assignPath.get("right.body.body.0.argument").node.operator
+                                        path.replaceInline(types.binaryExpression(operator, left, right))
+                                        // console.log(left, right, operator)
+
+                                    }
+                                    // 还原函数类型
+                                    else if (assignPath.get("right.body.body.0.argument").node.type === "CallExpression"){
+                                        // console.log(assignPath.get("right.body.body.0.argument").node.type)
+                                        left = string_arguments[0]
+                                        right = string_arguments.slice(1)
+                                        // operator = assignPath.get("right.body.body.0.argument").node.operator
+                                        path.replaceInline(types.callExpression(left,right))
+                                        // console.log(left)
+
+                                    }
+
+                                }
+
+                            }
+                        })
+                    }
+
+                }
+
+            }
+        }
+})
+
+// 字符串替换
+traverse(ast, {
+    MemberExpression: function (path){
+        if (path.get('property').node.type === "Identifier" && ["x",
+  "l",
+  "h",
+  'm',
+  'v',
+  'k',
+  'p',
+  'b',
+  '_' ,
+  'g' ,
+  'y' ,
+  'w' ,
+  'C' ,
+  'S' ,
+  'O' ,
+  'R' ,
+  'P' ,
+  'q' ,
+  'G' ,
+  'Q' ,
+  'z',
+  'j' ,
+  'N' ,
+  'J' ,
+  'F' ,
+  'K' ,
+  'B' ,
+  'L' ,
+  'A' ,
+  'M' ,
+  'E' ,
+  'V' ,
+  'D' ,
+  'H' ,
+  'Z' ,
+  'T' ,
+  'I',
+  'U' ].includes(path.get('property').node.name)){
+            const propertyPath = path.get('property');
+            console.log(path.toString())
+            name = path.get('property').node.name
+            name_bings = path.scope.getBinding(name)
+            console.log(name_bings.path.toString())
+            name_bings_value = name_bings.path.get("init").node.value
+            propertyPath.replaceInline(types.stringLiteral(name_bings_value))
+        }
+    }
+})
+
+const result = generate(ast).code
+
+fs.writeFileSync('./output.js', result)
