@@ -1,3 +1,49 @@
+const { performance } = require('perf_hooks')
+
+function random(min, max) {
+    return Math.random() * (max - min) + min
+}
+
+function buildTrack() {
+
+    const count = Math.floor(Math.random() * 3) + 1
+
+    const track = []
+
+    let x = 300
+    let y = 400
+    let aaa = 10000 + Math.random() * 20000
+
+    // 用 performance.now 模拟真实时间起点
+    let start = performance.now() + aaa
+
+    for (let i = 0; i < count; i++) {
+
+        // 模拟人不是连续动，而是“动一下 + 停顿”
+        const moveDelay = random(16, 60)
+        start += moveDelay
+
+        // 微抖动
+        x += random(-15, 30)
+        y += random(-10, 20)
+
+        track.push({
+            elementId: "",
+            clientX: Math.round(x),
+            clientY: Math.round(y),
+
+            // 核心：类似 event.timeStamp
+            timestamp: Math.floor(start)
+        })
+
+        // 偶尔停顿
+        if (Math.random() < 0.3) {
+            start += random(80, 300)
+        }
+    }
+
+    return track
+}
 
 window = global
 // delete Buffer
